@@ -1,0 +1,30 @@
+# Compose 编排：
+#  - verify：一次性服务。容器内执行规则测试 → 页面构建 → 启动 HTTP 服务做
+#    /health、健康授权链、撤销复核冒烟，随后以退出码结束（0 成功）。
+#      docker compose build verify && docker compose up verify
+#      docker compose inspect verify（退出码见 docker compose ps -a / logs）
+#  - app：常驻页面服务（构建好的复核页面 + /api/review）。
+#      docker compose up app  → http://localhost:8088/
+services:
+  verify:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: ["npm", "run", "verify"]
+    restart: "no"
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: ["node", "packages/verify/server.mjs"]
+    restart: unless-stopped
+    ports:
+      - "8088:8088"
+    environment:
+      PORT: "8088"
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:8088/health"]
+      interval: 10s
+      timeout: 3s
+      retries: 5

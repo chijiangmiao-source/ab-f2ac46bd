@@ -1,0 +1,23 @@
+{
+  "name": "offline-delegation-review",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "workspaces": [
+    "packages/core",
+    "packages/web",
+    "packages/verify"
+  ],
+  "scripts": {
+    "build:core": "tsc -p packages/core/tsconfig.json",
+    "build:web": "npm run build --workspace packages/web",
+    "build": "npm run build:core && npm run build:web",
+    "test": "npm run build:core && node --test packages/core/test/",
+    "verify": "node packages/verify/run-verify.mjs",
+    "serve": "node packages/verify/server.mjs"
+  },
+  "devDependencies": {
+    "typescript": "5.6.3",
+    "vite": "5.4.11"
+  }
+}

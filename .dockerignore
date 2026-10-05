@@ -1,0 +1,7 @@
+node_modules/
+.npm-cache/
+packages/core/dist/
+packages/web/dist/
+.git/
+*.log
+.DS_Store

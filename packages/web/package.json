@@ -1,0 +1,14 @@
+{
+  "name": "@offline/web",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "vite build",
+    "dev": "vite",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@noble/ed25519": "2.1.0",
+    "@offline/core": "1.0.0"
+  }
+}
