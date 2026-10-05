@@ -1,0 +1,33 @@
+# Compose for the offline key-maintenance review tool.
+#
+#   docker compose up                                 # one-shot verify
+#   docker compose run verify                         # same, usable in CI
+#   docker compose --profile serve up app             # serve the page on :8080
+#
+# The "verify" service executes exactly once and terminates with the
+# verification exit code. The "app" service serves the built review page.
+services:
+  verify:
+    build: .
+    command: ["node", "verify/verify.mjs"]
+    environment:
+      PORT: "0"
+    read_only: true
+    tmpfs:
+      - /tmp
+    # The job binds an ephemeral loopback port for its own HTTP smoke and
+    # contacts no external hosts.
+
+  app:
+    profiles: ["serve"]
+    build: .
+    command: ["node", "verify/serve.mjs"]
+    ports:
+      - "8080:8080"
+    environment:
+      PORT: "8080"
+      HOST: "0.0.0.0"
+    read_only: true
+    tmpfs:
+      - /tmp
+    restart: "no"

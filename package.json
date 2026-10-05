@@ -1,0 +1,28 @@
+{
+  "name": "workspace",
+  "version": "1.0.0",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test:rules": "node tests/model.test.mjs",
+    "test:page": "node tools/build.mjs && node tests/page.test.mjs",
+    "test": "node tests/model.test.mjs && node tools/build.mjs && node tests/page.test.mjs",
+    "build": "node tools/build.mjs",
+    "verify": "node verify/verify.mjs",
+    "serve": "node verify/serve.mjs"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "esbuild": "^0.28.2",
+    "jsdom": "^29.1.1"
+  },
+  "dependencies": {
+    "@noble/ed25519": "^1.7.5"
+  },
+  "type": "module"
+}

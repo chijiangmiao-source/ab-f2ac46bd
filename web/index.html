@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>卫星载荷离线维护密钥 · 委托/撤销因果复核台</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <header>
+    <h1>🛰️ 卫星载荷离线维护密钥</h1>
+    <span class="sub">委托 / 撤销 / 解锁记录的因果历史复核台 —— 每条解锁只按其实际可见的因果历史裁决，后到的撤销不溯及既往，已见撤销不得遗漏</span>
+  </header>
+
+  <aside>
+    <section class="card">
+      <h2>载入记录</h2>
+      <label>预置场景</label>
+      <div class="row" style="align-items:center">
+        <select id="scenario" style="flex:1">
+          <option value="healthy">健康路径（并列链 + 规范最短）</option>
+          <option value="revoke">撤销复核（后到撤销 / 并列存活）</option>
+          <option value="forgery">攻击样本：伪造签名</option>
+          <option value="counter-skip">攻击样本：计数跳跃</option>
+        </select>
+        <button id="btnSample">载入场景</button>
+      </div>
+      <label>或粘贴 / 编辑完整 JSON（≤8 个主体、1 个根主体、≤24 条事件）</label>
+      <textarea id="importJson" spellcheck="false"></textarea>
+      <div class="row" style="margin-top:8px">
+        <button id="btnLoad" class="primary">复核此 JSON</button>
+        <button id="btnExport">导出 JSON</button>
+        <label class="filebtn" for="fileImport" style="margin:4px 0 0">选择文件…</label>
+        <input id="fileImport" type="file" accept=".json,application/json" hidden />
+      </div>
+      <div id="importMsg" class="msg"></div>
+      <small class="hint">
+        签名覆盖除 <span class="mono">signature</span> 外、字段名按字典序排列的紧凑 UTF-8 JSON；
+        公钥与签名均为标准 Base64 的 Ed25519（32 / 64 字节）。
+        事件的 <span class="mono">seen</span> 向量是它声称见过的 <span class="mono">{主体: 计数}</span>；
+        裁决只依据该向量（传递闭包）所见的委托边与撤销。
+      </small>
+    </section>
+  </aside>
+
+  <main>
+    <div id="summary" class="counts" style="margin-bottom:14px"></div>
+
+    <div class="controls card" style="padding:10px 14px">
+      <button id="btnReset">⏮ 起点</button>
+      <button id="btnPrev">◀ 单步</button>
+      <input id="slider" type="range" min="0" max="24" value="0" />
+      <span id="stepMeta" class="step-meta">回放位置：0 / 0</span>
+      <button id="btnNext">单步 ▶</button>
+      <button id="btnPlay">▶ 连续播放</button>
+      <button id="btnReview" class="primary">直接复核整段 ⏭</button>
+    </div>
+
+    <div id="timeline"></div>
+  </main>
+
+  <script type="module" src="/app.js"></script>
+</body>
+</html>
